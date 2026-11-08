@@ -35,7 +35,7 @@ const en = {
   download: 'Download',
   retry: 'Retry',
   gestureHelp:
-    'Point your index finger at a dot and hold for 3 seconds to open it; buttons take 1 second. Make a fist, then spread your fingers to exit a selection. Pinch and drag to rotate. Pinch with both hands and pull apart to zoom.',
+    'Make a fist with your left hand and point your right index finger at a dot. Hold for 3 seconds to open it; buttons take 1 second. Make a fist, then spread your fingers to exit a selection. Pinch and drag to rotate. Pinch with both hands and pull apart to zoom.',
   closePanel: 'Close note details',
   openInObsidian: 'Open in Obsidian',
   similarNotes: 'Similar notes',
@@ -44,7 +44,7 @@ const en = {
   switchLanguage: 'Switch to Chinese',
 
   gestureNone: 'Hold your hand up to the camera.',
-  gestureOpen: 'Point your index finger to aim, or pinch to rotate.',
+  gestureOpen: 'Make a fist with your left hand and point with your right to aim. Pinch to rotate.',
   gestureAim: 'Aiming. Hold still to select.',
   gestureGrab: 'Rotating.',
   gestureZoom: 'Zooming.',
@@ -87,7 +87,7 @@ const zh: typeof en = {
   gestures: '手勢控制',
   download: '下載',
   retry: '重試',
-  gestureHelp: '伸出食指指向節點，停住 3 秒可開啟，按鈕只要 1 秒。握拳後張開五指可退出選取。捏住拖曳可旋轉，雙手捏住拉開可縮放。',
+  gestureHelp: '左手握拳，右手食指指向節點，停住 3 秒可開啟，按鈕只要 1 秒。握拳後張開五指可退出選取。捏住拖曳可旋轉，雙手捏住拉開可縮放。',
   closePanel: '關閉筆記資訊',
   openInObsidian: '在 Obsidian 開啟',
   similarNotes: '內容相近',
@@ -96,7 +96,7 @@ const zh: typeof en = {
   switchLanguage: '切換為英文',
 
   gestureNone: '把手舉到攝影機前面。',
-  gestureOpen: '伸出食指可瞄準，捏住可旋轉。',
+  gestureOpen: '左手握拳、右手伸出食指可瞄準，捏住可旋轉。',
   gestureAim: '瞄準中，停住即可選取。',
   gestureGrab: '旋轉中。',
   gestureZoom: '縮放中。',

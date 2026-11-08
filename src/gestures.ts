@@ -11,6 +11,8 @@ export interface HandInput {
   image: Point3[];
   /** Metric coordinates around the hand; unaffected by distance from the camera. */
   world: Point3[];
+  /** Which of the person's hands this is. */
+  side: 'left' | 'right';
 }
 
 export type GestureEvent =
@@ -19,7 +21,7 @@ export type GestureEvent =
   /** A closed fist sprang open into five spread fingers. */
   | { type: 'burst' };
 
-/** `open` is a tracked hand doing nothing; `aim` is an extended index finger. */
+/** `open` is a tracked hand doing nothing; `aim` is a left fist with the right index finger extended. */
 export type GestureMode = 'none' | 'open' | 'aim' | 'grab' | 'zoom';
 
 export interface GestureResult {
@@ -124,9 +126,21 @@ interface Slot {
   pointMissSince: number | null;
   /** Whether the cursor last followed the fingertip rather than the palm. */
   onFingertip: boolean;
+  /** Above zero when the hand is mostly reported as a left hand; a smoothed vote against flicker. */
+  leftVote: number;
+  /** A held fist, with the same tolerance for brief dropouts as pointing. */
+  gripping: boolean;
+  curledSince: number | null;
+  gripMissSince: number | null;
+  /** This fist enabled aiming, so opening it must not read as the exit gesture. */
+  gripUsed: boolean;
   fistSince: number | null;
   /** Last moment a sufficiently held fist was seen; 0 when none is waiting to open. */
   fistSeenAt: number;
+}
+
+function fingersCurled(world: Point3[]): boolean {
+  return ALL_FINGERS.every(([pip, tip]) => dist(world[tip], world[WRIST]) < dist(world[pip], world[WRIST]));
 }
 
 function isPointingPose(world: Point3[], gap: number): boolean {
@@ -153,8 +167,10 @@ export class GestureInterpreter {
 
     // Includes hands missed for a frame or two, so a tracking dropout doesn't end the gesture.
     const seen = this.slots;
-    const pinching = seen.filter((s) => s.pinching);
-    const pointing = seen.find((s) => s.pointing);
+    // A fist often puts the thumb against the index finger, so a held left fist is never a pinch.
+    const pinching = seen.filter((s) => s.pinching && !(s.leftVote > 0 && s.gripping));
+    const grip = seen.find((s) => s.leftVote > 0 && s.gripping);
+    const aimer = grip && seen.find((s) => s.leftVote <= 0 && s.pointing);
 
     let mode: GestureMode = seen.length ? 'open' : 'none';
     if (pinching.length >= 2) {
@@ -167,15 +183,18 @@ export class GestureInterpreter {
       this.zoomGap = gap;
     } else {
       this.zoomGap = 0;
-      // Aiming outranks grabbing, so a second hand can't move the target out from under the finger.
-      if (pointing) mode = 'aim';
+      if (grip && aimer) {
+        mode = 'aim';
+        grip.gripUsed = true;
+        grip.fistSeenAt = 0;
+      }
       else if (pinching.length === 1) {
         mode = 'grab';
         if (pinching[0].dx || pinching[0].dy) events.push({ type: 'rotate', dx: pinching[0].dx, dy: pinching[0].dy });
       }
     }
 
-    if (mode === 'aim') this.primary = pointing ?? null;
+    if (mode === 'aim') this.primary = aimer ?? null;
     else if (pinching.length) this.primary = pinching[0];
     else if (!this.primary || !seen.includes(this.primary)) this.primary = seen[0] ?? null;
     return { mode, cursor: this.primary ? { x: this.primary.x, y: this.primary.y } : null, events };
@@ -218,6 +237,11 @@ export class GestureInterpreter {
       pointFrames: 0,
       pointMissSince: null,
       onFingertip: false,
+      leftVote: 0,
+      gripping: false,
+      curledSince: null,
+      gripMissSince: null,
+      gripUsed: false,
       fistSince: null,
       fistSeenAt: 0,
     };
@@ -228,9 +252,9 @@ export class GestureInterpreter {
   private detectBurst(s: Slot, world: Point3[], gap: number, t: number, events: GestureEvent[]): void {
     const reach = (pip: number, tip: number) => dist(world[tip], world[WRIST]) / Math.max(dist(world[pip], world[WRIST]), 1e-4);
     // A thumb resting on the index fingertip is a pinch with curled fingers, not a fist.
-    if (!s.pinching && ALL_FINGERS.every(([pip, tip]) => reach(pip, tip) < 1)) {
+    if (!s.pinching && fingersCurled(world)) {
       s.fistSince ??= t;
-      if (t - s.fistSince >= FIST_MS) s.fistSeenAt = t;
+      if (t - s.fistSince >= FIST_MS && !s.gripUsed) s.fistSeenAt = t;
       return;
     }
     s.fistSince = null;
@@ -241,8 +265,29 @@ export class GestureInterpreter {
     }
   }
 
+  private updateGrip(s: Slot, world: Point3[], t: number): void {
+    if (fingersCurled(world)) {
+      s.curledSince ??= t;
+      s.gripMissSince = null;
+      if (t - s.curledSince >= FIST_MS) s.gripping = true;
+      return;
+    }
+    s.curledSince = null;
+    if (!s.gripping) {
+      s.gripUsed = false;
+      return;
+    }
+    s.gripMissSince ??= t;
+    if (t - s.gripMissSince >= AIM_RELEASE_MS) {
+      s.gripping = false;
+      s.gripMissSince = null;
+      s.gripUsed = false;
+    }
+  }
+
   private advance(s: Slot, hand: HandInput, t: number, events: GestureEvent[]): void {
-    const { world, image } = hand;
+    const { world, image, side } = hand;
+    s.leftVote += ((side === 'left' ? 1 : -1) - s.leftVote) * 0.25;
     const gap = dist(world[THUMB_TIP], world[INDEX_TIP]) / Math.max(dist(world[WRIST], world[MIDDLE_MCP]), 1e-4);
 
     if (!s.pinching) {
@@ -256,6 +301,7 @@ export class GestureInterpreter {
     }
 
     this.detectBurst(s, world, gap, t, events);
+    this.updateGrip(s, world, t);
 
     const pose = !s.pinching && isPointingPose(world, gap);
     if (s.pinching) {

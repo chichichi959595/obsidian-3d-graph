@@ -110,6 +110,7 @@ export class HandTracker {
     return found.landmarks.map((image, i) => ({
       image: image as Point3[],
       world: found.worldLandmarks[i] as Point3[],
+      side: found.handedness[i]?.[0]?.categoryName === 'Left' ? 'left' : 'right',
     }));
   }
 

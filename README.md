@@ -25,7 +25,7 @@ Click the orbit icon in the ribbon, or run **Open 3D graph in browser** from the
 
 | Gesture | Action |
 |---|---|
-| Point with your index finger and hold still | Open the nearest note after 3 seconds, or press a button after 1 second. The graph stays still while a hand is in view. |
+| Make a fist with your left hand, point with your right index finger and hold still | Open the nearest note after 3 seconds, or press a button after 1 second. The graph stays still while a hand is in view. |
 | Make a fist, then spread all five fingers | Exit the selection |
 | Pinch and drag | Rotate |
 | Pinch with both hands, then move them apart or together | Zoom |
