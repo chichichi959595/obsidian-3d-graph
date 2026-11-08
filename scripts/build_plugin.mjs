@@ -72,7 +72,8 @@ console.log(`dist/plugin/main.js ${(size / 1e6).toFixed(2)} MB`);
 
 const installAt = process.argv.indexOf('--install');
 if (installAt > 0) {
-  const target = join(process.argv[installAt + 1], '.obsidian/plugins/notes-graph-3d');
+  const { id } = JSON.parse(await readFile(join(root, 'manifest.json'), 'utf8'));
+  const target = join(process.argv[installAt + 1], '.obsidian/plugins', id);
   await mkdir(target, { recursive: true });
   await copyFile(join(outDir, 'main.js'), join(target, 'main.js'));
   await copyFile(join(outDir, 'manifest.json'), join(target, 'manifest.json'));

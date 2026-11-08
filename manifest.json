@@ -1,7 +1,7 @@
 {
-  "id": "notes-graph-3d",
+  "id": "notes-graph-three-d",
   "name": "Notes Graph 3D",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "minAppVersion": "1.12.7",
   "description": "Explore your notes as a 3D graph of dots and lines in your browser, with optional hand-gesture control. Requires the Analogy plugin.",
   "author": "Hayden Ho",
