@@ -12,7 +12,7 @@ import type { NoteSource } from './pipeline.ts';
 
 const SUPPORTED_SCHEMAS = ['1'];
 
-export type AnalogyFailure = 'unsupported-platform' | 'not-indexed' | 'unsupported-version' | 'empty';
+export type AnalogyFailure = 'unsupported-platform' | 'unsupported-runtime' | 'not-indexed' | 'unsupported-version' | 'empty';
 
 export class AnalogyError extends Error {
   readonly reason: AnalogyFailure;
@@ -49,7 +49,12 @@ export function sourceStamp(dbPath: string): number {
 
 function open(dbPath: string): DatabaseSync {
   // Resolved at run time: bundlers and older Electron builds must not see this as a static import.
-  const { DatabaseSync: Database } = createRequire(import.meta.url ?? __filename)('node:sqlite') as typeof import('node:sqlite');
+  let Database: typeof DatabaseSync;
+  try {
+    ({ DatabaseSync: Database } = createRequire(import.meta.url ?? __filename)('node:sqlite') as typeof import('node:sqlite'));
+  } catch (error) {
+    throw new AnalogyError('unsupported-runtime', `node:sqlite is unavailable: ${String(error)}`);
+  }
   return new Database(dbPath, { readOnly: true });
 }
 

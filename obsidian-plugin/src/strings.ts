@@ -4,6 +4,7 @@ import type { AnalogyFailure } from './analogy.ts';
 const en = {
   analogy: {
     'unsupported-platform': 'Notes Graph 3D needs Analogy, which only supports macOS and Windows.',
+    'unsupported-runtime': 'This copy of Obsidian is too old to read the Analogy index. Download the latest installer from obsidian.md.',
     'not-indexed': 'No Analogy index found for this vault. Install Analogy and let it finish indexing.',
     'unsupported-version': 'This version of Analogy is not supported yet. Update Notes Graph 3D.',
     empty: 'Analogy has not indexed any notes yet. Open this again when indexing has finished.',
@@ -22,6 +23,7 @@ const en = {
 const zh: typeof en = {
   analogy: {
     'unsupported-platform': 'Notes Graph 3D 需要 Analogy，而 Analogy 目前只支援 macOS 和 Windows。',
+    'unsupported-runtime': '這個 Obsidian 太舊，無法讀取 Analogy 索引。請到 obsidian.md 下載最新的安裝檔。',
     'not-indexed': '找不到這個 vault 的 Analogy 索引。請先安裝 Analogy 並完成索引。',
     'unsupported-version': '這個版本的 Analogy 尚未支援，請更新 Notes Graph 3D。',
     empty: 'Analogy 還沒有索引任何筆記。請等索引完成後再開啟。',

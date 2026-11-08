@@ -1,12 +1,15 @@
 # Notes Graph 3D
 
+![A 3D graph of notes as coloured dots and lines, with a legend of tags](docs/screenshot.png)
+
 Explore your Obsidian notes as a 3D graph of dots and lines. Notes that mean similar things sit close together, whether or not you have linked them. You can steer it with the mouse or, optionally, with your hands through a webcam.
 
 The graph opens in your default browser, because Obsidian cannot access the camera on macOS.
 
 ## Requirements
 
-- Obsidian desktop on macOS or Windows
+- Obsidian desktop. Tested on macOS with Obsidian 1.15. Windows is expected to work but has not been tested yet.
+- A recent Obsidian installer, not only a recent app version, because the plugin relies on the SQLite module built into newer installers
 - The Analogy plugin, with your vault indexed. Notes Graph 3D reuses Analogy's embeddings and does not compute its own.
 
 ## Use
