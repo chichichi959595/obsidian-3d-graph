@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Notes Graph 3D</title>
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='12' fill='none' stroke='%23e6ebf1' stroke-width='3'/%3E%3Ccircle cx='16' cy='16' r='4' fill='%23e6ebf1'/%3E%3C/svg%3E" />
+  </head>
+  <body>
+    <canvas id="holo" data-t-aria="graphLabel" aria-label="3D network of notes"></canvas>
+
+    <div id="labels" aria-hidden="true"></div>
+    <canvas id="hands" aria-hidden="true"></canvas>
+
+    <header id="status">
+      <h1 id="vault-name"></h1>
+      <p id="vault-stats"></p>
+      <section id="legend" data-t-aria="legendLabel">
+        <ul id="legend-list"></ul>
+        <p id="legend-error" role="status" hidden data-t="legendSaveFailed"></p>
+        <button id="legend-add" type="button" data-t="addGroup"></button>
+        <div id="legend-form" hidden>
+          <input id="legend-input" type="text" autocomplete="off" spellcheck="false" data-t-placeholder="addPlaceholder" data-t-aria="addPlaceholder" />
+          <ul id="legend-suggestions"></ul>
+        </div>
+      </section>
+    </header>
+
+    <section id="console" data-t-aria="controlsLabel">
+      <ul id="results" hidden></ul>
+      <input id="search" type="search" data-t-placeholder="search" data-t-aria="search" autocomplete="off" spellcheck="false" aria-controls="results" />
+      <div id="controls">
+        <div id="layouts" role="group" data-t-aria="layoutLabel">
+          <button type="button" data-layout="cloud" aria-pressed="true" data-t="layoutCloud"></button>
+          <button type="button" data-layout="globe" aria-pressed="false" data-t="layoutGlobe"></button>
+          <button type="button" data-layout="ring" aria-pressed="false" data-t="layoutRing"></button>
+        </div>
+        <div id="toggles" role="group" data-t-aria="edgesLabel">
+          <button type="button" data-edge="semantic" aria-pressed="true" data-t="edgeSemantic"></button>
+          <button type="button" data-edge="links" aria-pressed="true" data-t="edgeLinks"></button>
+        </div>
+        <button id="gesture" type="button" aria-pressed="false" data-t="gestures"></button>
+        <button id="language" type="button" data-t="otherLanguage" data-t-aria="switchLanguage"></button>
+      </div>
+      <div id="gesture-help" hidden>
+        <p id="gesture-status" role="status"></p>
+        <button id="gesture-download" type="button" hidden data-t="download"></button>
+        <p data-t="gestureHelp"></p>
+      </div>
+    </section>
+
+    <aside id="panel" hidden aria-live="polite">
+      <button id="close" type="button" data-t-aria="closePanel">×</button>
+      <h2 id="note-title"></h2>
+      <p id="note-path"></p>
+      <p id="note-meta"></p>
+      <p id="note-snippet"></p>
+      <a id="note-open" data-t="openInObsidian"></a>
+      <h3 data-t="similarNotes"></h3>
+      <ol id="note-similar"></ol>
+      <div id="links-block">
+        <h3 data-t="linkedNotes"></h3>
+        <ul id="note-links"></ul>
+      </div>
+    </aside>
+
+    <p id="error" hidden role="alert"></p>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

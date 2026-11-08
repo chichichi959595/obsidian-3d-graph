@@ -1,0 +1,28 @@
+{
+  "name": "notes-graph-3d",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "data": "node scripts/build_dev_data.ts",
+    "hands": "node scripts/setup_hands.mjs",
+    "dev": "node scripts/setup_hands.mjs && vite --host 127.0.0.1",
+    "build": "tsc --noEmit && vite build",
+    "typecheck": "tsc --noEmit",
+    "plugin": "node scripts/setup_hands.mjs && node scripts/build_plugin.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/saira": "^5.3.0",
+    "@mediapipe/tasks-vision": "^1.2.2",
+    "three": "^0.170.0",
+    "umap-js": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/node": "^24.19.2",
+    "@types/three": "^0.170.0",
+    "esbuild": "^0.28.2",
+    "obsidian": "^1.14.4",
+    "typescript": "^5.9.3",
+    "vite": "^6.4.5"
+  }
+}
